@@ -86,7 +86,7 @@ nvim_tree.setup {
     mappings = {
       custom_only = false,
       list = {
-        { key = { "l", "<CR>", "o" }, cb = tree_cb "edit" },
+        { key = { "e", "l", "<CR>", "o" }, cb = tree_cb "edit" },
         { key = "h", cb = tree_cb "close_node" },
         { key = "v", cb = tree_cb "vsplit" },
       },
@@ -95,7 +95,7 @@ nvim_tree.setup {
     relativenumber = false,
   },
   trash = {
-    cmd = "rm -rf",
+    cmd = "rip --graveyard=${XDG_DATA_HOME}/trash",
     require_confirm = true,
   },
   quit_on_open = 0,

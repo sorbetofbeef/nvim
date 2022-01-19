@@ -64,6 +64,10 @@ return packer.startup(function(use)
   use "lunarvim/darkplus.nvim"
   use "folke/tokyonight.nvim"
   use "mhartington/oceanic-next"
+  use "rebelot/kanagawa.nvim"
+  use {'kdheepak/monochrome.nvim', config = function()
+      vim.cmd 'colorscheme monochrome'
+  end}
 
   -- cmp plugins
   use "hrsh7th/nvim-cmp" -- The completion plugin
