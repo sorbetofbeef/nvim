@@ -65,9 +65,14 @@ return packer.startup(function(use)
   use "folke/tokyonight.nvim"
   use "mhartington/oceanic-next"
   use "rebelot/kanagawa.nvim"
-  use {'kdheepak/monochrome.nvim', config = function()
-      vim.cmd 'colorscheme monochrome'
-  end}
+  use 'marko-cerovac/material.nvim'
+  use 'mangeshrex/uwu.vim'
+  use 'kdheepak/monochrome.nvim'
+  use {
+    "catppuccin/nvim",
+    as = "catppuccin"
+  }
+  use 'EdenEast/nightfox.nvim'
 
   -- cmp plugins
   use "hrsh7th/nvim-cmp" -- The completion plugin
@@ -77,6 +82,8 @@ return packer.startup(function(use)
   use "saadparwaiz1/cmp_luasnip" -- snippet completions
   use "hrsh7th/cmp-nvim-lsp"
   use {'tzachar/cmp-tabnine', run='./install.sh', requires = 'hrsh7th/nvim-cmp'}
+  use { 'tami5/lspsaga.nvim' }
+  use "folke/lua-dev.nvim"
 
   -- snippets
   use "L3MON4D3/LuaSnip" --snippet engine
@@ -97,12 +104,41 @@ return packer.startup(function(use)
     run = ":TSUpdate",
   }
   use "JoosepAlviste/nvim-ts-context-commentstring"
+  use "nvim-treesitter/nvim-treesitter-textobjects"
 
   -- Solidity
   use "tomlion/vim-solidity"
 
   -- Git
   use "lewis6991/gitsigns.nvim"
+
+  -- Go
+  use "ray-x/go.nvim"
+  use {'ray-x/guihua.lua', run = 'cd lua/fzy && make'}
+
+  -- Rust
+  use {
+    "simrat39/rust-tools.nvim",
+    config = function ()
+      require('rust-tools').setup({})
+    end
+  }
+
+  -- Debugger
+  use "mfussenegger/nvim-dap"
+  use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
+  use "Pocco81/DAPInstall.nvim"
+
+  -- Neoscroll
+  use 'karb94/neoscroll.nvim'
+
+  -- Colorizer
+  use {
+    'norcalli/nvim-colorizer.lua',
+    config = function ()
+      require'colorizer'.setup()
+    end
+  }
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins

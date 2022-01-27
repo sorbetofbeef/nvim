@@ -1,5 +1,20 @@
 local M = {}
 
+local cmp_status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+if not cmp_status_ok then
+  return
+end
+
+local which_status_ok, which_key = pcall(require, "which-key")
+if not which_status_ok then
+  return
+end
+
+local wk_status_ok, wk = pcall(require, "user.whichkey")
+if not wk_status_ok then
+  return
+end
+
 -- TODO: backfill this to template
 M.setup = function()
   local signs = {
@@ -63,24 +78,59 @@ local function lsp_highlight_document(client)
   end
 end
 
+
 local function lsp_keymaps(bufnr)
-  local opts = { noremap = true, silent = true }
-  vim.api.nvim_buf_set_keymap(bufnr, "n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-  vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-  vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-  vim.api.nvim_buf_set_keymap(bufnr, "n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-  vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-  vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-  vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>f", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
-  vim.api.nvim_buf_set_keymap(bufnr, "n", "[d", '<cmd>lua vim.diagnostic.goto_prev({ border = "rounded" })<CR>', opts)
-  vim.api.nvim_buf_set_keymap( bufnr, "n", "gl", '<cmd>lua vim.diagnostic.get()<CR>', opts
-  )
-  vim.api.nvim_buf_set_keymap(bufnr, "n", "]d", '<cmd>lua vim.diagnostic.goto_next({ border = "rounded" })<CR>', opts)
-  -- vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>q", "<cmd>lua vim.diagnostic.setloclist()<CR>", opts)
+  -- map(bufnr, "n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+  -- map(bufnr, "n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+  -- map(bufnr, "n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+  -- map(bufnr, "n", "gj", "<cmd>Lspsaga diagnostic_jump_next<cr>", opts)
+  -- map(bufnr, "n", "gk", "<cmd>Lspsaga diagnostic_jump_prev<cr>", opts)
+
+  vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", {noremap = true, silent = true})
+
+  wk.opts.buffer = bufnr
+
+  which_key.register({
+    a = {
+      name = "LSP",
+      D = {"<cmd>lua vim.lsp.buf.declaration()<CR>", "GoTo Declaration" },
+
+      d = {"<cmd>lua vim.lsp.buf.definition()<CR>", "GoTo Definition"},
+
+      i = {"<cmd>lua vim.lsp.buf.implementation()<CR>", "GoTo Implementation"},
+
+      r = {"<cmd>Lspsaga rename<cr>", "Rename"},
+
+      a = {"<cmd>Lspsaga code_action<cr>", "Code Action"},
+
+      A = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
+
+      k = {"<cmd>lua vim.lsp.buf.signature_help()<CR>", "Show Signature Help"},
+
+      l = {"<cmd>Lspsaga show_line_diagnostics<cr>", "Show Line Diagnostics"},
+
+      c = {"<cmd>Lspsaga show_cursor_diagnostics<cr>", "Show Cursor Diagnostics"},
+    },
+
+    ["j"] = {
+      "<cmd>Lspsaga diagnostic_jump_next<cr>",
+      "Next Diagnostic",
+    },
+
+    ["k"] = {
+      "<cmd>Lspsaga diagnostic_jump_prev<cr>",
+      "Prev Diagnostic",
+    },
+
+    ["<C-y>"] = {"<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<cr>", "Saga Scroll Up"},
+
+    ["<C-e>"] = {"<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<cr>", "Saga Scroll Down"},
+
+
+  }, wk.opts)
   vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
 end
+
 
 M.on_attach = function(client, bufnr)
   if client.name == "tsserver" then
@@ -92,11 +142,8 @@ end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 
-local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-if not status_ok then
-  return
-end
-
 M.capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+
+which_key.setup(wk.setup)
 
 return M
