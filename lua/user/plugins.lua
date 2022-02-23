@@ -73,6 +73,10 @@ return packer.startup(function(use)
     as = "catppuccin"
   }
   use 'EdenEast/nightfox.nvim'
+  use 'shaunsingh/nord.nvim'
+  use 'yorik1984/newpaper.nvim'
+  use 'rafamadriz/neon'
+  use 'Shatur/neovim-ayu'
 
   -- cmp plugins
   use "hrsh7th/nvim-cmp" -- The completion plugin
@@ -82,7 +86,7 @@ return packer.startup(function(use)
   use "saadparwaiz1/cmp_luasnip" -- snippet completions
   use "hrsh7th/cmp-nvim-lsp"
   use {'tzachar/cmp-tabnine', run='./install.sh', requires = 'hrsh7th/nvim-cmp'}
-  use { 'tami5/lspsaga.nvim' }
+  use 'tami5/lspsaga.nvim'
   use "folke/lua-dev.nvim"
 
   -- snippets
@@ -106,6 +110,9 @@ return packer.startup(function(use)
   use "JoosepAlviste/nvim-ts-context-commentstring"
   use "nvim-treesitter/nvim-treesitter-textobjects"
 
+  use { 'tpope/vim-dadbod' }
+  use { 'kristijanhusak/vim-dadbod-ui' }
+
   -- Solidity
   use "tomlion/vim-solidity"
 
@@ -114,7 +121,19 @@ return packer.startup(function(use)
 
   -- Go
   use "ray-x/go.nvim"
-  use {'ray-x/guihua.lua', run = 'cd lua/fzy && make'}
+  use {
+    "ray-x/guihua.lua",
+    run = "cd lua/fzy && make"
+  }
+
+  -- Yuck
+  use 'elkowar/yuck.vim'
+
+  -- Ion Shell
+  use 'vmchale/ion-vim'
+
+  -- Pareninfer
+  use 'eraserhd/parinfer-rust'
 
   -- Rust
   use {
@@ -128,6 +147,12 @@ return packer.startup(function(use)
   use "mfussenegger/nvim-dap"
   use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
   use "Pocco81/DAPInstall.nvim"
+  use {
+    "theHamsta/nvim-dap-virtual-text",
+    config = function()
+      require("nvim-dap-virtual-text").setup()
+    end
+  }
 
   -- Neoscroll
   use 'karb94/neoscroll.nvim'
@@ -138,6 +163,12 @@ return packer.startup(function(use)
     config = function ()
       require'colorizer'.setup()
     end
+  }
+
+  -- Multi Cursor
+  use {
+    'mg979/vim-visual-multi',
+    branch = 'master'
   }
 
   -- Automatically set up your configuration after cloning packer.nvim

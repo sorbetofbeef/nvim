@@ -1,4 +1,4 @@
-local M = {}
+local G = {}
 
 local cmp_status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 if not cmp_status_ok then
@@ -16,7 +16,7 @@ if not wk_status_ok then
 end
 
 -- TODO: backfill this to template
-M.setup = function()
+G.setup = function()
   local signs = {
     { name = "DiagnosticSignError", text = "" },
     { name = "DiagnosticSignWarn", text = "" },
@@ -72,78 +72,75 @@ local function lsp_highlight_document(client)
         autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
         autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
       augroup END
-    ]],
-      false
-    )
+    ]], false)
   end
 end
 
-
-local function lsp_keymaps(bufnr)
-  -- map(bufnr, "n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-  -- map(bufnr, "n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-  -- map(bufnr, "n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-  -- map(bufnr, "n", "gj", "<cmd>Lspsaga diagnostic_jump_next<cr>", opts)
-  -- map(bufnr, "n", "gk", "<cmd>Lspsaga diagnostic_jump_prev<cr>", opts)
-
-  vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", {noremap = true, silent = true})
-
-  wk.opts.buffer = bufnr
+local lsp_keymaps = function(bufnr)
+  which_key.setup(wk.setup)
 
   which_key.register({
     a = {
       name = "LSP",
+      -- GoTo's
       D = {"<cmd>lua vim.lsp.buf.declaration()<CR>", "GoTo Declaration" },
-
       d = {"<cmd>lua vim.lsp.buf.definition()<CR>", "GoTo Definition"},
-
       i = {"<cmd>lua vim.lsp.buf.implementation()<CR>", "GoTo Implementation"},
-
-      r = {"<cmd>Lspsaga rename<cr>", "Rename"},
-
-      a = {"<cmd>Lspsaga code_action<cr>", "Code Action"},
-
+      -- Refactor
       A = { "<cmd>lua vim.lsp.codelens.run()<cr>", "CodeLens Action" },
-
-      k = {"<cmd>lua vim.lsp.buf.signature_help()<CR>", "Show Signature Help"},
-
-      l = {"<cmd>Lspsaga show_line_diagnostics<cr>", "Show Line Diagnostics"},
-
-      c = {"<cmd>Lspsaga show_cursor_diagnostics<cr>", "Show Cursor Diagnostics"},
+      a = {"<cmd>Lspsaga code_action<cr>", "Code Action"},
+      r = {"<cmd>Lspsaga rename<cr>", "Rename"},
+      f = { "<cmd>lua vim.lsp.buf.formatting()<cr>", "Format"},
+      -- Diagnostics
+      l = {"<cmd>Lspsaga show_line_diagnostics<cr>", "Line Diagnostics"},
+      c = {"<cmd>Lspsaga show_cursor_diagnostics<cr>", "Cursor Diagnostics"},
+      j = { "<cmd>lua vim.diagnostic.goto_next()<CR>", "Next Diagnostic"},
+      k = { "<cmd>lua vim.diagnostic.goto_prev()<cr>", "Prev Diagnostic"},
+      -- Workspaces
+      L = {"<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "List Workspaces"},
+      W = { "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", "Add Workspace"},
+      w = { "<cmd>Telescope lsp_workspace_diagnostics<cr>", "Workspace Diagnostics"},
+      R = { "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", "Remove Workspaces"},
+      -- Search
+      s = { "<cmd>Telescope lsp_document_symbols<cr>", "Document Symbols"},
+      S = { "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>", "Workspace Symbols"},
+      E = { "<cmd>Telescope lsp_document_diagnostics<cr>", "Document Diagnostics"},
+      q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "Quickfix"},
+      -- Info
+      n = { "<cmd>LspInfo<cr>", "LSP Info"},
+      I = { "<cmd>LspInstallInfo<cr>", "Installer Info"},
     },
-
-    ["j"] = {
-      "<cmd>Lspsaga diagnostic_jump_next<cr>",
-      "Next Diagnostic",
-    },
-
-    ["k"] = {
-      "<cmd>Lspsaga diagnostic_jump_prev<cr>",
-      "Prev Diagnostic",
-    },
-
-    ["<C-y>"] = {"<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<cr>", "Saga Scroll Up"},
-
-    ["<C-e>"] = {"<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<cr>", "Saga Scroll Down"},
-
-
   }, wk.opts)
-  vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
+
+  -- Cycle through diagnostics
+  vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-j>", "<cmd>Lspsaga diagnostic_jump_next<cr>", {noremap=true, silent=true})
+  vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-k>", "<cmd>Lspsaga diagnostic_jump_prev<cr>", {noremap=true, silent=true})
+
+  -- Saga menu scrolling
+  vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-y>", "<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<cr>", {noremap=true, silent=true})
+  vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-e>", "<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<cr>", {noremap=true, silent=true})
+
+  -- Floating Info
+  vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", {noremap = true, silent = true})
+  vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-S-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", {noremap = true, silent = true})
 end
 
 
-M.on_attach = function(client, bufnr)
+G.on_attach = function(client, bufnr)
+
   if client.name == "tsserver" then
     client.resolved_capabilities.document_formatting = false
   end
+
+  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
   lsp_keymaps(bufnr)
   lsp_highlight_document(client)
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 
-M.capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+G.capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
 
-which_key.setup(wk.setup)
 
-return M
+return G

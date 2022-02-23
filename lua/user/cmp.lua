@@ -45,6 +45,8 @@ local kind_icons = {
 }
 -- find more here: https://www.nerdfonts.com/cheat-sheet
 
+local servers = {'rust_analyzer', 'pyright', 'tsserver'}
+
 cmp.setup {
   snippet = {
     expand = function(args)
@@ -116,6 +118,7 @@ cmp.setup {
     { name = "luasnip" },
     { name = "buffer" },
     { name = "path" },
+--    { name = "norg" },
     { name = "cmp_tabnine" },
   },
   confirm_opts = {

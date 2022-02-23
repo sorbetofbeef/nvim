@@ -1,4 +1,4 @@
-return {
+require("lspconfig").gopls.setup {
   cmd = {"gopls", "serve"},
     settings = {
       gopls = {
@@ -7,5 +7,6 @@ return {
         },
       staticcheck = true,
     },
+    
   },
 }

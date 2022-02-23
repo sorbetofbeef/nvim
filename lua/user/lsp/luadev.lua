@@ -1,6 +1,6 @@
 local luadev = require("lua-dev").setup({
   lspconfig = {
-    cmd = {"lua-language-server"}
+    cmd = {"/home/me/.local/share/nvim/lsp_servers/sumneko_lua/extension/server/bin/lua-language-server"}
   },
 })
 

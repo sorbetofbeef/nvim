@@ -24,10 +24,6 @@ vim.cmd([[
     autocmd BufUnload <buffer> set showtabline=2
   augroup end
 
-  augroup _auto_resize
-    autocmd!
-    autocmd VimResized * tabdo wincmd =
-  augroup end
 ]])
 
 -- Autoformat
@@ -35,3 +31,8 @@ vim.cmd([[
 --   autocmd!
 --   autocmd BufWritePre * lua vim.lsp.buf.formatting()
 -- augroup end
+
+--  augroup _auto_resize
+--    autocmd!
+--    autocmd VimResized * tabdo wincmd =
+--  augroup end
