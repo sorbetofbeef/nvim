@@ -1,6 +1,5 @@
-return {
+require("lspconfig").gopls.setup {
 	settings = {
-
 		Lua = {
 			diagnostics = {
 				globals = { "vim" },

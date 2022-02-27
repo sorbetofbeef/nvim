@@ -20,3 +20,12 @@ comment.setup {
     }
   end,
 }
+
+local map = function(mode, lhs, rhs)
+  local opt = { noremap = true, silent = true}
+  vim.api.nvim_set_keymap(mode, lhs, rhs, opt)
+end
+
+map('n', 'gc', '<cmd>lua require("Comment.api").toggle_current_linewise()<CR>')
+map('x', 'gb', '<esc><cmd>lua require("Comment.api").toggle_blockwise_op(vim.fn.visualmode())<CR>')
+

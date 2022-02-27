@@ -7,6 +7,5 @@ require("lspconfig").gopls.setup {
         },
       staticcheck = true,
     },
-    
   },
 }
