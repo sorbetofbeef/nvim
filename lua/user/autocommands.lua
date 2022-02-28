@@ -16,7 +16,7 @@ vim.cmd([[
   augroup _markdown
     autocmd!
     autocmd FileType markdown setlocal wrap
-    autocmd FileType markdown setlocal spell
+    " autocmd FileType markdown setlocal spell
   augroup end
 
   augroup _alpha
@@ -24,6 +24,12 @@ vim.cmd([[
     autocmd BufUnload <buffer> set showtabline=2
   augroup end
 
+  augroup _go
+    autocmd!
+    autocmd FileType go setlocal shiftwidth=4
+    autocmd FileType go setlocal tabstop=4
+    autocmd FileType go setlocal expandtab
+  augroup end
 ]])
 
 -- Autoformat

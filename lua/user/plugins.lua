@@ -143,6 +143,9 @@ return packer.startup(function(use)
     end
   }
 
+  -- markdown
+  use "ellisonleao/glow.nvim"
+
   -- Debugger
   use "mfussenegger/nvim-dap"
   use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
@@ -169,6 +172,15 @@ return packer.startup(function(use)
   use {
     'mg979/vim-visual-multi',
     branch = 'master'
+  }
+
+  -- Kitty navigation
+  use {
+    'hermitmaster/nvim-kitty-navigator',
+    run = 'cp kitty/* ~/.config/kitty/',
+    config = function()
+      require('nvim-kitty-navigator').setup()
+    end
   }
 
   -- Automatically set up your configuration after cloning packer.nvim

@@ -150,7 +150,6 @@ vim.cmd("colorscheme material")
 -- vim.g.neon_style = "light"
 -- vim.g.neon_italic_function = true
 -- vim.g.neon_bold = true
--- 
 -- -- Load the colorscheme
 -- vim.cmd[[colorscheme neon]]
 

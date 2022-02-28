@@ -45,7 +45,7 @@ local kind_icons = {
 }
 -- find more here: https://www.nerdfonts.com/cheat-sheet
 
-local servers = {'rust_analyzer', 'pyright', 'tsserver'}
+-- local servers = {'rust_analyzer', 'pyright', 'tsserver'}
 
 cmp.setup {
   snippet = {

@@ -1,4 +1,5 @@
 local wk = require("which-key")
+local wk_conf = require("user.whichkey")
 
 wk.register({
   d = {
@@ -8,6 +9,6 @@ wk.register({
     r = {":DBUIRenameBuffer<CR>", "DB Rename Buffer"},
     l = {":DBUILastQueryInfo<CR>", "DB Last Query Info"}
   }
-}, wk.opts)
+}, wk_conf.opts)
 
 vim.g.db_ui_save_location='~/.config/db_ui'
